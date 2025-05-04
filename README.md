@@ -1,7 +1,7 @@
 -- ce projet contient : 
-- la partie api (intelij)
 - la partie front (visual studio)
-- script de la base de donnée (postgre)
+
+- pré-requis : installer node.js, et expo
 
 avant de faire tourner le projet pour la 1ere fois:
 - ouvrir un gitbash sur le dossier du front 

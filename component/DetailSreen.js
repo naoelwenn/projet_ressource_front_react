@@ -59,6 +59,7 @@ export default function DetailsScreen({ navigation, route }) {
     });
   };
 
+  //-- téléchargement du fichier de la ressource
   const handleDownload = () => {
     const downloadUrl = `http://localhost:8080/api/ressources/${ressource.id}/download`;
     window.open(downloadUrl, '_blank');

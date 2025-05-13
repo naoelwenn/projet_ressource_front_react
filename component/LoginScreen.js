@@ -35,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/utilisateurs/connexion', {
+      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/connexion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

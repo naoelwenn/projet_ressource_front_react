@@ -20,11 +20,13 @@ const SearchRessource = ({navigation}) =>{
   const SPACING = ITEM_WIDTH/10; // on veut un espace égal à la largeur d’un bloc / 10
   // Calcul dynamique du nombre de colonnes selon la taille de l'écran
   const numColumns = Math.max(1, Math.floor(window.width / (ITEM_WIDTH + SPACING)));
+  
 
   //-- liste les ressources
   const fetchRessources = async()=>{
     try{
-      const reponse = await fetch("http://localhost:8080/api/ressources"); 
+      const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "ressources"); 
+      console.log(reponse);
       if (!reponse.ok) throw new Error("Reponse réseau non ok");
   
       const data = await reponse.json();
@@ -82,7 +84,7 @@ const SearchRessource = ({navigation}) =>{
   useEffect(()=>{
     const fetchType_Relation = async()=>{
         try{
-          const reponse = await fetch("http://localhost:8080/api/type_relation"); 
+          const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_relation"); 
           if (!reponse.ok) throw new Error("Reponse réseau non ok");
       
           const data = await reponse.json();
@@ -104,7 +106,7 @@ const SearchRessource = ({navigation}) =>{
   useEffect(()=>{
     const fetchCategorie_Ressource = async()=>{
         try{
-          const reponse = await fetch("http://localhost:8080/api/categorie_ressource"); 
+          const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "categorie_ressource"); 
           if (!reponse.ok) throw new Error("Reponse réseau non ok");
       
           const data = await reponse.json();
@@ -126,7 +128,7 @@ const SearchRessource = ({navigation}) =>{
     useEffect(()=>{
       const fetchType_Ressource = async()=>{
           try{
-            const reponse = await fetch("http://localhost:8080/api/type_ressource"); 
+            const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_ressource"); 
             if (!reponse.ok) throw new Error("Reponse réseau non ok");
         
             const data = await reponse.json();

@@ -163,7 +163,7 @@ const SearchRessource = ({navigation}) =>{
       {/* bouton de création d'un compte utilisateur */}
       <TouchableOpacity
         style={styles.smallButton}
-        // onPress={() => navigation.navigate('Register')}
+        onPress={() => navigation.navigate('Register')}
         >
         <Text style={styles.smallButtonText}>Inscription</Text>
       </TouchableOpacity>

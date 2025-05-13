@@ -9,7 +9,7 @@ export default function DetailsScreen({ navigation, route }) {
 
   //-- liste les ressources
   const fetchRessource = (id) => {
-    fetch(`http://localhost:8080/api/ressources/${id}`)
+    fetch(process.env.EXPO_PUBLIC_API_URL + `ressources/${id}`)
       .then((res) => {
         console.log("Status de la réponse:", res.status); 
         if (!res.ok) throw new Error("Réponse réseau non OK");
@@ -37,7 +37,7 @@ export default function DetailsScreen({ navigation, route }) {
     const isConfirmed =  await confirmation(); // Attendre la confirmation de l'utilisateur
     if (isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:8080/api/ressources/${ressource.id}`, {
+        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + `ressources/${ressource.id}`, {
           method: 'DELETE',
         });
     
@@ -65,7 +65,7 @@ export default function DetailsScreen({ navigation, route }) {
     const fileExist = async()=>{
       try{
         const { ressourceId } = route.params;
-        const reponse = await fetch(`http://localhost:8080/api/ressources/${ressourceId}/fileExist`); 
+        const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + `ressources/${ressourceId}/fileExist`); 
         if (!reponse.ok) throw new Error("Reponse réseau non ok");
     
         const data = await reponse.text();
@@ -79,7 +79,7 @@ export default function DetailsScreen({ navigation, route }) {
 
   //-- téléchargement du fichier de la ressource
   const handleDownload = () => {
-    const downloadUrl = `http://localhost:8080/api/ressources/${ressource.id}/download`;
+    const downloadUrl = process.env.EXPO_PUBLIC_API_URL + `ressources/${ressource.id}/download`;
     window.open(downloadUrl, '_blank');
   };
   

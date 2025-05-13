@@ -39,7 +39,7 @@ export default function EditScreen({ navigation, route }) {
     useEffect(() => {
         if(isEditMode){
             const { ressourceId } = route.params;
-            fetch(`http://localhost:8080/api/ressources/${ressourceId}`)
+            fetch(process.env.EXPO_PUBLIC_API_URL + `ressources/${ressourceId}`)
             .then((res) => {
                 if (!res.ok) throw new Error("Réponse réseau non OK");
                 return res.json();
@@ -67,7 +67,7 @@ export default function EditScreen({ navigation, route }) {
     useEffect(()=>{
         const fetchCategorie_Ressource = async()=>{
             try{
-            const reponse = await fetch("http://localhost:8080/api/categorie_ressource"); 
+            const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "categorie_ressource"); 
             if (!reponse.ok) throw new Error("Reponse réseau non ok");
         
             const data = await reponse.json();
@@ -89,7 +89,7 @@ export default function EditScreen({ navigation, route }) {
     useEffect(()=>{
         const fetchType_Ressource = async()=>{
           try{
-            const reponse = await fetch("http://localhost:8080/api/type_ressource"); 
+            const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_ressource"); 
             if (!reponse.ok) throw new Error("Reponse réseau non ok");
         
             const data = await reponse.json();
@@ -111,7 +111,7 @@ export default function EditScreen({ navigation, route }) {
     useEffect(()=>{
         const fetchType_Relation = async()=>{
             try{
-            const reponse = await fetch("http://localhost:8080/api/type_relation"); 
+            const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_relation"); 
             if (!reponse.ok) throw new Error("Reponse réseau non ok");
         
             const data = await reponse.json();
@@ -133,8 +133,8 @@ export default function EditScreen({ navigation, route }) {
     const handleSave = async () => {
         const method = isEditMode ? 'PUT' : 'POST';
         const url = isEditMode 
-          ? `http://localhost:8080/api/ressources/${ressource.id}` 
-          : `http://localhost:8080/api/ressources`;
+          ? process.env.EXPO_PUBLIC_API_URL + `ressources/${ressource.id}` 
+          : process.env.EXPO_PUBLIC_API_URL + `ressources`;
 
         const ressourceModifiee = {
           id: isEditMode ? ressource.id : undefined,
@@ -198,7 +198,7 @@ export default function EditScreen({ navigation, route }) {
     //-- envoi du fichier vers l'API
     const uploadFile = async (ressourceId, file) => {
       console.log(file);
-      const url = `http://localhost:8080/api/ressources/${ressourceId}/upload`;
+      const url = process.env.EXPO_PUBLIC_API_URL + `ressources/${ressourceId}/upload`;
     
       const formData = new FormData();
       formData.append("file", file);

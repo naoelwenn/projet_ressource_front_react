@@ -84,7 +84,7 @@ const SearchRessource = ({navigation}) =>{
   useEffect(()=>{
     const fetchType_Relation = async()=>{
         try{
-          const reponse = await fetch("http://localhost:8080/api/type_relation"); 
+          const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_relation"); 
           if (!reponse.ok) throw new Error("Reponse réseau non ok");
       
           const data = await reponse.json();
@@ -106,7 +106,7 @@ const SearchRessource = ({navigation}) =>{
   useEffect(()=>{
     const fetchCategorie_Ressource = async()=>{
         try{
-          const reponse = await fetch("http://localhost:8080/api/categorie_ressource"); 
+          const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "categorie_ressource"); 
           if (!reponse.ok) throw new Error("Reponse réseau non ok");
       
           const data = await reponse.json();
@@ -128,7 +128,7 @@ const SearchRessource = ({navigation}) =>{
     useEffect(()=>{
       const fetchType_Ressource = async()=>{
           try{
-            const reponse = await fetch("http://localhost:8080/api/type_ressource"); 
+            const reponse = await fetch(process.env.EXPO_PUBLIC_API_URL + "type_ressource"); 
             if (!reponse.ok) throw new Error("Reponse réseau non ok");
         
             const data = await reponse.json();

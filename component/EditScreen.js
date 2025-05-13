@@ -164,7 +164,9 @@ export default function EditScreen({ navigation, route }) {
                
           // Si c'est une modification (edit), retour à DetailScreen avec rafraîchissement
           if (isEditMode) {
-            uploadFile(ressourceModifiee.id, selectedFile);
+            if(selectedFile!= null){
+              uploadFile(ressourceModifiee.id, selectedFile);
+            }
             navigation.replace("Ma ressource", { 
             ressourceId: ressourceModifiee.id, 
             refresh: true 
@@ -172,7 +174,9 @@ export default function EditScreen({ navigation, route }) {
           } else {
             // Si c'est une création, ouverture de la nouvelle ressource en detail
             const newRessource = await response.json(); // Récupère la ressource créée
-            uploadFile(newRessource.id, selectedFile);
+            if(selectedFile!= null){
+              uploadFile(newRessource.id, selectedFile);
+            }
             navigation.replace("Ma ressource", { 
             ressourceId: newRessource.id 
             });
@@ -211,7 +215,7 @@ export default function EditScreen({ navigation, route }) {
     
         const result = await response.text();
         console.log('Réponse serveur :', result);
-        alert('Fichier uploadé avec succès !');
+        //alert('Fichier uploadé avec succès !');
       } catch (error) {
         console.error('Erreur upload :', error);
         alert('Erreur upload : ' + error.message);

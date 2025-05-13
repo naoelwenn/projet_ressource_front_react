@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
@@ -52,18 +42,6 @@ const LoginScreen = ({ navigation }) => {
       if (response.ok) {
         // Stockage des données utilisateur
         await storeUserData(data);
-        
-        // Affichage d'un message de bienvenue
-        Alert.alert(
-          'Bienvenue !',
-          `Bonjour ${data.pseudo} !`,
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Ressources')
-            }
-          ]
-        );
         navigation.navigate('Ressources')
       } else {
         Alert.alert('Erreur', data.message || 'Email ou mot de passe incorrect');

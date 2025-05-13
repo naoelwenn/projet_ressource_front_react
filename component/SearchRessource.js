@@ -152,6 +152,39 @@ const SearchRessource = ({navigation}) =>{
   return (
     <View style={styles.container}>
 
+    <View style={styles.headerButtons}>
+      {/* bouton de connexion */}
+      <TouchableOpacity
+        style={styles.smallButton}
+        onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.smallButtonText}>Connexion</Text>
+      </TouchableOpacity>
+
+      {/* bouton de création d'un compte utilisateur */}
+      <TouchableOpacity
+        style={styles.smallButton}
+        // onPress={() => navigation.navigate('Register')}
+        >
+        <Text style={styles.smallButtonText}>Inscription</Text>
+      </TouchableOpacity>
+    </View>
+
+      {/* bouton de connexion
+      <TouchableOpacity
+      style={styles.editButton}
+      onPress={() => navigation.navigate('Login')}
+      >
+        <Text style={styles.editButtonText}>Connexion</Text>
+      </TouchableOpacity>
+
+      // {/* bouton de création d'un compte utilisateur */}
+      {/* // <TouchableOpacity */}
+      {/* // style={styles.editButton}
+      // // onPress={() => navigation.navigate('Connexion')}
+      // >
+      // <Text style={styles.editButtonText}>Inscription</Text>
+      // </TouchableOpacity> */} 
+
       {/* bouton de création d'une ressource */}
       <TouchableOpacity
       style={styles.editButton}
@@ -336,6 +369,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    gap: 10,
+  },
+  
+  smallButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  
+  smallButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 

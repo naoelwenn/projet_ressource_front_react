@@ -5,6 +5,7 @@ import { SafeAreaView} from 'react-native';
 
 export default function DetailsScreen({ navigation, route }) {
   const [ressource, setRessource] = useState(null);
+  const [file, setFile] = useState("");
 
   //-- liste les ressources
   const fetchRessource = (id) => {
@@ -59,6 +60,23 @@ export default function DetailsScreen({ navigation, route }) {
     });
   };
 
+  //-- controle la présence d'un fichier uploadé
+  useEffect(()=>{
+    const fileExist = async()=>{
+      try{
+        const { ressourceId } = route.params;
+        const reponse = await fetch(`http://localhost:8080/api/ressources/${ressourceId}/fileExist`); 
+        if (!reponse.ok) throw new Error("Reponse réseau non ok");
+    
+        const data = await reponse.text();
+        setFile(data);
+      } catch(error){
+        console.error("FileExist : Erreur de fetch", error);
+      };
+    };
+    fileExist();
+  }, []); 
+
   //-- téléchargement du fichier de la ressource
   const handleDownload = () => {
     const downloadUrl = `http://localhost:8080/api/ressources/${ressource.id}/download`;
@@ -89,13 +107,19 @@ export default function DetailsScreen({ navigation, route }) {
         <Text style = {styles.text}>{ressource.contenu}</Text>
 
         {/* bouton de téléchargement */}
+
+        {file != "" && (
         <TouchableOpacity
         style={styles.editButton}
         onPress={handleDownload}
         >
         <Text style={styles.editButtonText}>Télécharger le fichier</Text>
         </TouchableOpacity>
+        )}
 
+        {file != "" && (
+          <Text>Fichier : {file}</Text>
+        )}
 
         {/* bouton de modification */}
         <TouchableOpacity

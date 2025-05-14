@@ -33,7 +33,8 @@ const globalStyle = StyleSheet.create({
 
     //-- champs de saisie (combobox et input text)
     standardInputContainer: {
-        marginBottom: 10,
+        marginTop: 5,
+        marginBottom:5
     },
     standardLabel: {
         fontSize: 16,
@@ -135,6 +136,7 @@ const globalStyle = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 20,
+        alignSelf: 'center'
     },
     standardButtonText: {
         color: '#fff',

@@ -12,35 +12,84 @@ const RegisterScreen = ({ navigation }) => {
     anneenaissance: '',
     etatcivil: 'H',
   });
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const validateField = (field, value) => {
+    let error = '';
+    switch (field) {
+      case 'email':
+        if (!value) {
+          error = 'L\'email est requis';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = 'Format d\'email invalide (ex: nom@domaine.com)';
+        }
+        break;
+      case 'password':
+        if (!value) {
+          error = 'Le mot de passe est requis';
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)){
+          error = 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre';
+        }
+        break;
+      case 'pseudo':
+        if (!value) {
+          error = 'Le pseudo est requis';
+        }
+        break;
+      case 'ville':
+        if (!value) {
+          error = 'La ville est requise';
+        }
+        break;
+      case 'codepostal':
+        if (!value) {
+          error = 'Le code postal est requis';
+        } else if (!/^\d{5}$/.test(value)) {
+          error = 'Le code postal doit contenir 5 chiffres';
+        }
+        break;
+      case 'anneenaissance':
+        if (!value) {
+          error = 'L\'année de naissance est requise';
+        } else {
+          const year = parseInt(value);
+          if (isNaN(year)) {
+            error = 'L\'année doit être un nombre';
+          } else if (year < 1900) {
+            error = 'L\'année doit être après 1900';
+          } else if (year > new Date().getFullYear()) {
+            error = 'L\'année ne peut pas être dans le futur';
+          }
+        }
+        break;
+    }
+    return error;
+  };
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+    // Validation en temps réel
+    const error = validateField(field, value);
+    setErrors(prev => ({
+      ...prev,
+      [field]: error
+    }));
   };
 
   const handleRegister = async () => {
-    // Validation des champs
-    if (!formData.email || !formData.password || !formData.pseudo || 
-        !formData.ville || !formData.codepostal || !formData.anneenaissance) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
-      return;
-    }
+    // Validation de tous les champs
+    const newErrors = {};
+    Object.keys(formData).forEach(field => {
+      const error = validateField(field, formData[field]);
+      if (error) newErrors[field] = error;
+    });
 
-    // Validation de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      Alert.alert('Erreur', 'Veuillez entrer une adresse email valide');
-      return;
-    }
-
-    // Validation de l'année de naissance
-    const year = parseInt(formData.anneenaissance);
-    const currentYear = new Date().getFullYear();
-    if (isNaN(year) || year < 1900 || year > currentYear) {
-      Alert.alert('Erreur', 'Veuillez entrer une année de naissance valide');
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -58,12 +107,12 @@ const RegisterScreen = ({ navigation }) => {
         actif: true
       };
 
-      console.log('Données envoyées au serveur:', userData);
-
       const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/inscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Origin': 'http://localhost:8081'
         },
         body: JSON.stringify(userData),
       });
@@ -75,9 +124,6 @@ const RegisterScreen = ({ navigation }) => {
       } else {
         data = await response.text();
       }
-      
-      console.log('Status:', response.status);
-      console.log('Réponse du serveur:', data);
 
       if (response.ok) {
         Alert.alert(
@@ -91,16 +137,14 @@ const RegisterScreen = ({ navigation }) => {
           ]
         );
       } else {
-        let errorMessage = 'Erreur lors de l\'inscription';
         if (typeof data === 'object' && data !== null) {
-          errorMessage = Object.values(data).join('\n');
-        } else if (typeof data === 'string') {
-          errorMessage = data;
+          setErrors(data);
+        } else {
+          Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
         }
-        Alert.alert('Erreur', errorMessage);
       }
     } catch (error) {
-      console.error('Erreur complète:', error);
+      console.error('Erreur:', error);
       Alert.alert(
         'Erreur',
         'Impossible de se connecter au serveur. Vérifiez votre connexion.'
@@ -123,7 +167,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.email && styles.inputError]}
                 placeholder="Entrez votre email"
                 value={formData.email}
                 onChangeText={(value) => handleChange('email', value)}
@@ -131,46 +175,50 @@ const RegisterScreen = ({ navigation }) => {
                 autoCapitalize="none"
                 editable={!isLoading}
               />
+              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Mot de passe *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.password && styles.inputError]}
                 placeholder="Entrez votre mot de passe"
                 value={formData.password}
                 onChangeText={(value) => handleChange('password', value)}
                 secureTextEntry
                 editable={!isLoading}
               />
+              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Pseudo *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.pseudo && styles.inputError]}
                 placeholder="Choisissez un pseudo"
                 value={formData.pseudo}
                 onChangeText={(value) => handleChange('pseudo', value)}
                 editable={!isLoading}
               />
+              {errors.pseudo && <Text style={styles.errorText}>{errors.pseudo}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Ville *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.ville && styles.inputError]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
                 onChangeText={(value) => handleChange('ville', value)}
                 editable={!isLoading}
               />
+              {errors.ville && <Text style={styles.errorText}>{errors.ville}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Code postal *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.codepostal && styles.inputError]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
                 onChangeText={(value) => handleChange('codepostal', value)}
@@ -178,12 +226,13 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={5}
                 editable={!isLoading}
               />
+              {errors.codepostal && <Text style={styles.errorText}>{errors.codepostal}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Année de naissance *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.anneenaissance && styles.inputError]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}
                 onChangeText={(value) => handleChange('anneenaissance', value)}
@@ -191,6 +240,7 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={4}
                 editable={!isLoading}
               />
+              {errors.anneenaissance && <Text style={styles.errorText}>{errors.anneenaissance}</Text>}
             </View>
 
             <View style={styles.inputContainer}>
@@ -288,6 +338,16 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     backgroundColor: '#f9f9f9',
+  },
+  inputError: {
+    borderColor: '#ff3b30',
+    backgroundColor: '#fff5f5',
+  },
+  errorText: {
+    color: '#ff3b30',
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 5,
   },
   radioContainer: {
     flexDirection: 'row',

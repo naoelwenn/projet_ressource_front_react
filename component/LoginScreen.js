@@ -8,14 +8,14 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const storeUserData = async (userData) => {
-    try {
-      await AsyncStorage.setItem('userData', JSON.stringify(userData));
-      console.log('Données utilisateur stockées:', userData);
-    } catch (error) {
-      console.error('Erreur lors du stockage des données:', error);
-    }
-  };
+  // const storeUserData = async (userData) => {
+  //   try {
+  //     await AsyncStorage.setItem('userData', JSON.stringify(userData));
+  //     console.log('Données utilisateur stockées:', userData);
+  //   } catch (error) {
+  //     console.error('Erreur lors du stockage des données:', error);
+  //   }
+  // };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -42,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
 
       if (response.ok) {
         // Stockage des données utilisateur
-        await storeUserData(data);
+        await storeToken(data.token, data.id, data.pseudo);
         navigation.navigate('Ressources')
       } else {
         Alert.alert('Erreur', data.message || 'Email ou mot de passe incorrect');
@@ -55,6 +55,16 @@ const LoginScreen = ({ navigation }) => {
       );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const storeToken = async (token, id, pseudo) => {
+    try {
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userId', id);
+      await AsyncStorage.setItem('userPseudo', pseudo);
+    } catch (e) {
+      console.error('Erreur stockage token :', e);
     }
   };
 

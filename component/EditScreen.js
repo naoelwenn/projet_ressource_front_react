@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { SafeAreaView, Platform } from 'react-native';
 import{Picker} from '@react-native-picker/picker';
 import MultiSelect from 'react-native-multiple-select';
+import Header from '../component/Header';
+import globalStyles from '../Styles/globalStyles';
 
 const screenWidth = Dimensions.get('window').width; //-- récupère la largeur de la fenetre
 
@@ -221,27 +223,19 @@ export default function EditScreen({ navigation, route }) {
         alert('Erreur upload : ' + error.message);
       }
     };
-    
-      
-
-    //-- attend que la ressource soit chargée
-    // if (!ressource) {
-    //     return <Text>Loading...</Text>;
-    // }else{
-    //     console.log(ressource);
-    // }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
+        <SafeAreaView style={globalStyles.container}>
+            <Header/>
+            <View style={globalStyles.header}>
                 <Image
                     source={{ uri: "https://cdn-icons-png.flaticon.com/32/716/716784.png" }} // icone dossier pour exemple
-                    style={styles.image}
+                    style={globalStyles.image}
                 />
 
                 {/* Titre : text input*/}
                 <TextInput 
-                    style={styles.textInput}
+                    style={globalStyles.input}
                     placeholder="Titre"
                     onChangeText={setTitre}
                     value={titre} 
@@ -253,7 +247,7 @@ export default function EditScreen({ navigation, route }) {
                 {/* type(s) de relation : multiselect */}
                 {/* revoir le css à mettre dans la feuille de style */}
                 <MultiSelect
-                style = {styles.textInput}
+                style = {globalStyles.input}
                 items={type_relation}
                 uniqueKey="id"
                 onSelectedItemsChange={setSelectedTypeRelation}
@@ -275,7 +269,7 @@ export default function EditScreen({ navigation, route }) {
                 {/* Catégorie de ressource : combobox */}
                 <Picker
                     selectedValue={selectedCategorieRessource}
-                    style={styles.textInput}
+                    style={globalStyles.input}
                     onValueChange={(itemValue)=>setSelectedCategorieRessource(itemValue)}
                 >
                     {categorie_ressource.map((type)=> (
@@ -290,7 +284,7 @@ export default function EditScreen({ navigation, route }) {
                 {/* Type de ressource : combobox */}
                 <Picker
                     selectedValue={selectedTypeRessource}
-                    style={styles.textInput}
+                    style={globalStyles.input}
                     onValueChange={(itemValue)=>setSelectedTypeRessource(itemValue)}
                 >
                     {type_ressource.map((type)=> (
@@ -304,7 +298,7 @@ export default function EditScreen({ navigation, route }) {
 
                 {/* Contenu : text input*/}
                 <TextInput 
-                    style={styles.textInput}
+                    style={globalStyles.input}
                     placeholder="Contenu"
                     onChangeText={setContenu}
                     value={contenu} 
@@ -322,76 +316,13 @@ export default function EditScreen({ navigation, route }) {
 
                 {/* Enregistrer */}
                 <TouchableOpacity
-                style={styles.editButton}
+                style={globalStyles.standardButton}
                 onPress={handleSave}
                 >
-                <Text style={styles.editButtonText}>Enregistrer</Text>
+                <Text style={globalStyles.standardButtonText}>Enregistrer</Text>
                 </TouchableOpacity>
             
             </View>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    width: screenWidth * 0.85, // toute la vue prend 85% de la largeur
-    alignItems: 'center',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    alignSelf: "center"
-  },
-  title: {
-    fontSize: 16,
-    color: "#333",
-    fontWeight: "500",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  text: {
-    fontSize: 14,
-    color: "#333",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  editButton: {
-    marginTop: 20,
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignSelf: 'center'
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  textInput: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginHorizontal: 10,
-    marginBottom: 15,
-    elevation: 2, // pour un peu d’ombre sur Android
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    width: screenWidth * 0.66, // 2/3 de l'écran
-  }
-});

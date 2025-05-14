@@ -15,7 +15,7 @@ const Header = ({ user }) => {
             <Text style={styles.link}>Connexion</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-            // onPress={() => navigation.navigate("Register")}
+            onPress={() => navigation.navigate("Register")}
             >
             <Text style={styles.link}>Inscription</Text>
           </TouchableOpacity>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {  StyleSheet,  View,  Text,  TextInput,  TouchableOpacity,  SafeAreaView,  KeyboardAvoidingView,  Platform,  Alert, ScrollView
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -68,16 +70,27 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const handleChange = (field, value) => {
+    // Mise à jour du formulaire
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
     // Validation en temps réel
     const error = validateField(field, value);
     setErrors(prev => ({
       ...prev,
-      [field]: error
+      [field]: error || null
     }));
+  };
+
+  const storeUserData = async (userData) => {
+    try {
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      console.log('Données utilisateur stockées:', userData);
+    } catch (error) {
+      console.error('Erreur lors du stockage des données:', error);
+    }
   };
 
   const handleRegister = async () => {
@@ -94,6 +107,8 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     setIsLoading(true);
+    console.log('URL de l\'API:', process.env.EXPO_PUBLIC_API_URL);
+    console.log('Données envoyées:', formData);
 
     try {
       const userData = {
@@ -107,37 +122,62 @@ const RegisterScreen = ({ navigation }) => {
         actif: true
       };
 
+      console.log('Tentative de connexion à l\'API...');
       const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/inscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Origin': 'http://localhost:8081'
+          'Accept': 'application/json'
         },
         body: JSON.stringify(userData),
       });
 
+      console.log('Statut de la réponse:', response.status);
       let data;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await response.json();
-      } else {
-        data = await response.text();
+      try {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          data = await response.json();
+          console.log('Réponse JSON:', data);
+        } else {
+          const textData = await response.text();
+          console.log('Réponse texte:', textData);
+          throw new Error(textData);
+        }
+      } catch (error) {
+        console.error('Erreur de parsing:', error);
+        Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
+        return;
       }
 
       if (response.ok) {
-        Alert.alert(
-          'Succès',
-          'Inscription réussie ! Vous pouvez maintenant vous connecter.',
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Login')
-            }
-          ]
-        );
+        console.log('Inscription réussie, préparation de la redirection...');
+        // Stocker les données utilisateur
+        await storeUserData(data);
+        
+        // Redirection directe sans alerte
+        console.log('Tentative de redirection directe...');
+        try {
+          navigation.navigate('Ressources');
+          console.log('Navigation effectuée');
+        } catch (error) {
+          console.error('Erreur de navigation:', error);
+          // Si la navigation échoue, on essaie une autre approche
+          try {
+            console.log('Tentative de navigation alternative...');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Ressources' }],
+              })
+            );
+            console.log('Navigation alternative effectuée');
+          } catch (error2) {
+            console.error('Erreur de navigation alternative:', error2);
+          }
+        }
       } else {
-        if (typeof data === 'object' && data !== null) {
+        if (data && typeof data === 'object') {
           setErrors(data);
         } else {
           Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
@@ -167,7 +207,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email *</Text>
               <TextInput
-                style={[styles.input, errors.email && styles.inputError]}
+                style={[styles.input, errors.email ? styles.inputError : null]}
                 placeholder="Entrez votre email"
                 value={formData.email}
                 onChangeText={(value) => handleChange('email', value)}
@@ -175,50 +215,50 @@ const RegisterScreen = ({ navigation }) => {
                 autoCapitalize="none"
                 editable={!isLoading}
               />
-              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+              {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Mot de passe *</Text>
               <TextInput
-                style={[styles.input, errors.password && styles.inputError]}
+                style={[styles.input, errors.password ? styles.inputError : null]}
                 placeholder="Entrez votre mot de passe"
                 value={formData.password}
                 onChangeText={(value) => handleChange('password', value)}
                 secureTextEntry
                 editable={!isLoading}
               />
-              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+              {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Pseudo *</Text>
               <TextInput
-                style={[styles.input, errors.pseudo && styles.inputError]}
+                style={[styles.input, errors.pseudo ? styles.inputError : null]}
                 placeholder="Choisissez un pseudo"
                 value={formData.pseudo}
                 onChangeText={(value) => handleChange('pseudo', value)}
                 editable={!isLoading}
               />
-              {errors.pseudo && <Text style={styles.errorText}>{errors.pseudo}</Text>}
+              {errors.pseudo ? <Text style={styles.errorText}>{errors.pseudo}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Ville *</Text>
               <TextInput
-                style={[styles.input, errors.ville && styles.inputError]}
+                style={[styles.input, errors.ville ? styles.inputError : null]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
                 onChangeText={(value) => handleChange('ville', value)}
                 editable={!isLoading}
               />
-              {errors.ville && <Text style={styles.errorText}>{errors.ville}</Text>}
+              {errors.ville ? <Text style={styles.errorText}>{errors.ville}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Code postal *</Text>
               <TextInput
-                style={[styles.input, errors.codepostal && styles.inputError]}
+                style={[styles.input, errors.codepostal ? styles.inputError : null]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
                 onChangeText={(value) => handleChange('codepostal', value)}
@@ -226,13 +266,13 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={5}
                 editable={!isLoading}
               />
-              {errors.codepostal && <Text style={styles.errorText}>{errors.codepostal}</Text>}
+              {errors.codepostal ? <Text style={styles.errorText}>{errors.codepostal}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Année de naissance *</Text>
               <TextInput
-                style={[styles.input, errors.anneenaissance && styles.inputError]}
+                style={[styles.input, errors.anneenaissance ? styles.inputError : null]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}
                 onChangeText={(value) => handleChange('anneenaissance', value)}
@@ -240,7 +280,7 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={4}
                 editable={!isLoading}
               />
-              {errors.anneenaissance && <Text style={styles.errorText}>{errors.anneenaissance}</Text>}
+              {errors.anneenaissance ? <Text style={styles.errorText}>{errors.anneenaissance}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>

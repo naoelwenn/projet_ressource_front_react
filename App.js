@@ -8,6 +8,7 @@ import HomeScreen from './component/HomeSreen';
 import DetailScreen from './component/DetailSreen';
 import EditScreen from './component/EditScreen';
 import LoginScreen from './component/LoginScreen';
+import RegisterScreen from './component/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
         <Stack.Screen name="Ressources" component={HomeScreen}/>
         <Stack.Screen name="Ma ressource" component={DetailScreen} />
         <Stack.Screen name="Edition" component={EditScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

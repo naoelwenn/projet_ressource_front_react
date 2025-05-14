@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {  StyleSheet,  View,  Text,  TextInput,  TouchableOpacity,  SafeAreaView,  KeyboardAvoidingView,  Platform,  Alert, ScrollView
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -12,39 +14,101 @@ const RegisterScreen = ({ navigation }) => {
     anneenaissance: '',
     etatcivil: 'H',
   });
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const validateField = (field, value) => {
+    let error = '';
+    switch (field) {
+      case 'email':
+        if (!value) {
+          error = 'L\'email est requis';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = 'Format d\'email invalide (ex: nom@domaine.com)';
+        }
+        break;
+      case 'password':
+        if (!value) {
+          error = 'Le mot de passe est requis';
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)){
+          error = 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre';
+        }
+        break;
+      case 'pseudo':
+        if (!value) {
+          error = 'Le pseudo est requis';
+        }
+        break;
+      case 'ville':
+        if (!value) {
+          error = 'La ville est requise';
+        }
+        break;
+      case 'codepostal':
+        if (!value) {
+          error = 'Le code postal est requis';
+        } else if (!/^\d{5}$/.test(value)) {
+          error = 'Le code postal doit contenir 5 chiffres';
+        }
+        break;
+      case 'anneenaissance':
+        if (!value) {
+          error = 'L\'année de naissance est requise';
+        } else {
+          const year = parseInt(value);
+          if (isNaN(year)) {
+            error = 'L\'année doit être un nombre';
+          } else if (year < 1900) {
+            error = 'L\'année doit être après 1900';
+          } else if (year > new Date().getFullYear()) {
+            error = 'L\'année ne peut pas être dans le futur';
+          }
+        }
+        break;
+    }
+    return error;
+  };
+
   const handleChange = (field, value) => {
+    // Mise à jour du formulaire
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
+    // Validation en temps réel
+    const error = validateField(field, value);
+    setErrors(prev => ({
+      ...prev,
+      [field]: error || null
+    }));
+  };
+
+  const storeUserData = async (userData) => {
+    try {
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      console.log('Données utilisateur stockées:', userData);
+    } catch (error) {
+      console.error('Erreur lors du stockage des données:', error);
+    }
   };
 
   const handleRegister = async () => {
-    // Validation des champs
-    if (!formData.email || !formData.password || !formData.pseudo || 
-        !formData.ville || !formData.codepostal || !formData.anneenaissance) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
-      return;
-    }
+    // Validation de tous les champs
+    const newErrors = {};
+    Object.keys(formData).forEach(field => {
+      const error = validateField(field, formData[field]);
+      if (error) newErrors[field] = error;
+    });
 
-    // Validation de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      Alert.alert('Erreur', 'Veuillez entrer une adresse email valide');
-      return;
-    }
-
-    // Validation de l'année de naissance
-    const year = parseInt(formData.anneenaissance);
-    const currentYear = new Date().getFullYear();
-    if (isNaN(year) || year < 1900 || year > currentYear) {
-      Alert.alert('Erreur', 'Veuillez entrer une année de naissance valide');
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     setIsLoading(true);
+    console.log('URL de l\'API:', process.env.EXPO_PUBLIC_API_URL);
+    console.log('Données envoyées:', formData);
 
     try {
       const userData = {
@@ -58,49 +122,69 @@ const RegisterScreen = ({ navigation }) => {
         actif: true
       };
 
-      console.log('Données envoyées au serveur:', userData);
-
+      console.log('Tentative de connexion à l\'API...');
       const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/inscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify(userData),
       });
 
+      console.log('Statut de la réponse:', response.status);
       let data;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await response.json();
-      } else {
-        data = await response.text();
+      try {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          data = await response.json();
+          console.log('Réponse JSON:', data);
+        } else {
+          const textData = await response.text();
+          console.log('Réponse texte:', textData);
+          throw new Error(textData);
+        }
+      } catch (error) {
+        console.error('Erreur de parsing:', error);
+        Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
+        return;
       }
-      
-      console.log('Status:', response.status);
-      console.log('Réponse du serveur:', data);
 
       if (response.ok) {
-        Alert.alert(
-          'Succès',
-          'Inscription réussie ! Vous pouvez maintenant vous connecter.',
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Login')
-            }
-          ]
-        );
-      } else {
-        let errorMessage = 'Erreur lors de l\'inscription';
-        if (typeof data === 'object' && data !== null) {
-          errorMessage = Object.values(data).join('\n');
-        } else if (typeof data === 'string') {
-          errorMessage = data;
+        console.log('Inscription réussie, préparation de la redirection...');
+        // Stocker les données utilisateur
+        await storeUserData(data);
+        
+        // Redirection directe sans alerte
+        console.log('Tentative de redirection directe...');
+        try {
+          navigation.navigate('Ressources');
+          console.log('Navigation effectuée');
+        } catch (error) {
+          console.error('Erreur de navigation:', error);
+          // Si la navigation échoue, on essaie une autre approche
+          try {
+            console.log('Tentative de navigation alternative...');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Ressources' }],
+              })
+            );
+            console.log('Navigation alternative effectuée');
+          } catch (error2) {
+            console.error('Erreur de navigation alternative:', error2);
+          }
         }
-        Alert.alert('Erreur', errorMessage);
+      } else {
+        if (data && typeof data === 'object') {
+          setErrors(data);
+        } else {
+          Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription');
+        }
       }
     } catch (error) {
-      console.error('Erreur complète:', error);
+      console.error('Erreur:', error);
       Alert.alert(
         'Erreur',
         'Impossible de se connecter au serveur. Vérifiez votre connexion.'
@@ -123,7 +207,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.email ? styles.inputError : null]}
                 placeholder="Entrez votre email"
                 value={formData.email}
                 onChangeText={(value) => handleChange('email', value)}
@@ -131,46 +215,50 @@ const RegisterScreen = ({ navigation }) => {
                 autoCapitalize="none"
                 editable={!isLoading}
               />
+              {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Mot de passe *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.password ? styles.inputError : null]}
                 placeholder="Entrez votre mot de passe"
                 value={formData.password}
                 onChangeText={(value) => handleChange('password', value)}
                 secureTextEntry
                 editable={!isLoading}
               />
+              {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Pseudo *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.pseudo ? styles.inputError : null]}
                 placeholder="Choisissez un pseudo"
                 value={formData.pseudo}
                 onChangeText={(value) => handleChange('pseudo', value)}
                 editable={!isLoading}
               />
+              {errors.pseudo ? <Text style={styles.errorText}>{errors.pseudo}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Ville *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.ville ? styles.inputError : null]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
                 onChangeText={(value) => handleChange('ville', value)}
                 editable={!isLoading}
               />
+              {errors.ville ? <Text style={styles.errorText}>{errors.ville}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Code postal *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.codepostal ? styles.inputError : null]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
                 onChangeText={(value) => handleChange('codepostal', value)}
@@ -178,12 +266,13 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={5}
                 editable={!isLoading}
               />
+              {errors.codepostal ? <Text style={styles.errorText}>{errors.codepostal}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Année de naissance *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errors.anneenaissance ? styles.inputError : null]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}
                 onChangeText={(value) => handleChange('anneenaissance', value)}
@@ -191,6 +280,7 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={4}
                 editable={!isLoading}
               />
+              {errors.anneenaissance ? <Text style={styles.errorText}>{errors.anneenaissance}</Text> : null}
             </View>
 
             <View style={styles.inputContainer}>
@@ -288,6 +378,16 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     backgroundColor: '#f9f9f9',
+  },
+  inputError: {
+    borderColor: '#ff3b30',
+    backgroundColor: '#fff5f5',
+  },
+  errorText: {
+    color: '#ff3b30',
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 5,
   },
   radioContainer: {
     flexDirection: 'row',

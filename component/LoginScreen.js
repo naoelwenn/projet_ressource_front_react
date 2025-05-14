@@ -72,6 +72,7 @@ const LoginScreen = ({ navigation }) => {
     setIsLoading(true);
 
     try {
+      console.log('Tentative de connexion au serveur...');
       const response = await fetch(process.env.EXPO_PUBLIC_API_URL + 'utilisateurs/connexion', {
         method: 'POST',
         headers: {
@@ -88,18 +89,19 @@ const LoginScreen = ({ navigation }) => {
         await storeToken(data.token, data.id, data.pseudo);
         navigation.navigate('Ressources')
       } else {
-        // Si le serveur répond avec un statut d'erreur
         if (response.status === 401) {
           setLoginError('Email ou mot de passe incorrect');
         } else {
-          setLoginError(data.message || 'Une erreur est survenue lors de la connexion : Email ou mot de passe incorrect');
+          setLoginError(data.message || 'Une erreur est survenue lors de la connexion');
         }
       }
     } catch (error) {
-      console.error('Erreur:', error);
-      // Seulement si c'est une erreur réseau
-      if (error.message.includes('Network request failed')) {
-        setLoginError('Impossible de se connecter au serveur. Vérifiez que le serveur est bien lancé.');
+      console.error('Erreur détaillée:', error);
+      if (error.message.includes('Network request failed') || error.message.includes('Failed to fetch')) {
+        setLoginError('Le serveur n\'est pas accessible. Veuillez vérifier que :\n\n' +
+          '1. Le serveur backend est bien démarré\n' +
+          '2. L\'adresse du serveur est correcte\n' +
+          '3. Vous êtes bien connecté au réseau');
       } else {
         setLoginError('Une erreur est survenue lors de la connexion');
       }

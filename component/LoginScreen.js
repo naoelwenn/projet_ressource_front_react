@@ -44,14 +44,14 @@ const LoginScreen = ({ navigation }) => {
     }));
   };
 
-  const storeUserData = async (userData) => {
-    try {
-      await AsyncStorage.setItem('userData', JSON.stringify(userData));
-      console.log('Données utilisateur stockées:', userData);
-    } catch (error) {
-      console.error('Erreur lors du stockage des données:', error);
-    }
-  };
+  // const storeUserData = async (userData) => {
+  //   try {
+  //     await AsyncStorage.setItem('userData', JSON.stringify(userData));
+  //     console.log('Données utilisateur stockées:', userData);
+  //   } catch (error) {
+  //     console.error('Erreur lors du stockage des données:', error);
+  //   }
+  // };
 
   const handleLogin = async () => {
     // Réinitialiser l'erreur de connexion
@@ -85,8 +85,9 @@ const LoginScreen = ({ navigation }) => {
       console.log('Réponse du serveur:', data);
 
       if (response.ok) {
-        await storeUserData(data);
-        navigation.navigate('Ressources');
+        // Stockage des données utilisateur
+        await storeToken(data.token, data.id, data.pseudo);
+        navigation.navigate('Ressources')
       } else {
         if (response.status === 401) {
           setLoginError('Email ou mot de passe incorrect');
@@ -106,6 +107,16 @@ const LoginScreen = ({ navigation }) => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const storeToken = async (token, id, pseudo) => {
+    try {
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userId', id);
+      await AsyncStorage.setItem('userPseudo', pseudo);
+    } catch (e) {
+      console.error('Erreur stockage token :', e);
     }
   };
 

@@ -3,13 +3,28 @@ import { useState, useEffect } from 'react';
 import { SafeAreaView} from 'react-native';
 import Header from '../component/Header';
 import globalStyles from '../Styles/globalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function DetailsScreen({ navigation, route }) {
   const [ressource, setRessource] = useState(null);
   const [file, setFile] = useState("");
+  const [userId, setUserId] = useState(null);
 
-  //-- liste les ressources
+  //-- récupère l'id de l'utilisateur connecté
+  useEffect(()=>{
+    const fetchUser = async () => {
+      try {
+        const id = await AsyncStorage.getItem('userId');
+        setUserId(id);
+      } catch (err) {
+        console.error('Erreur chargement user id:', err);
+      }
+    };
+    fetchUser();
+  })
+
+  //-- récupère les infos de la ressource
   const fetchRessource = (id) => {
     fetch(process.env.EXPO_PUBLIC_API_URL + `ressources/${id}`)
       .then((res) => {
@@ -103,42 +118,37 @@ export default function DetailsScreen({ navigation, route }) {
             style={globalStyles.image}
         />
         <Text style={globalStyles.title}>{ressource.titre}</Text>
-        <Text style = {globalStyles.text}>Crée le : {ressource.dateCreation}</Text>
+        <Text style = {globalStyles.text}>Crée le : {ressource.dateCreation} par {ressource.utilisateur.pseudo}</Text>
         <Text style = {globalStyles.text}>Relation : {ressource.type_relation?.map(tr => tr.libelle).join(", ")}</Text>
         <Text style = {globalStyles.text}>Catégorie : {ressource.categorie_ressource.libelle}</Text>
         <Text style = {globalStyles.text}>Type : {ressource.type_ressource.libelle}</Text>
         <Text style = {globalStyles.text}>{ressource.contenu}</Text>
 
-        {/* bouton de téléchargement */}
-
+        {/* bouton de téléchargement : seulement si un fichier est présent*/}
         {file != "" && (
-        <TouchableOpacity
-        style={globalStyles.standardButton}
-        onPress={handleDownload}
-        >
-        <Text style={globalStyles.standardButtonText}>Télécharger le fichier</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={globalStyles.standardButton} onPress={handleDownload}>
+            <Text style={globalStyles.standardButtonText}>Télécharger le fichier</Text>
+          </TouchableOpacity>
         )}
 
-        {file != "" && (
-          <Text>Fichier : {file}</Text>
+        {file != "" && (<Text style = {globalStyles.text}>Fichier : {file}</Text>)}
+
+        {/* bouton de modification : seulement pour l'auteur de la ressource */}
+        {userId == ressource.utilisateur.id && (
+          <TouchableOpacity style={globalStyles.standardButton} onPress={() => navigation.navigate('Edition', { ressourceId: ressource.id })}>
+            <Text style={globalStyles.standardButtonText}>Modifier</Text>
+          </TouchableOpacity>
         )}
 
-        {/* bouton de modification */}
-        <TouchableOpacity
-        style={globalStyles.standardButton}
-        onPress={() => navigation.navigate('Edition', { ressourceId: ressource.id })}
-        >
-          <Text style={globalStyles.standardButtonText}>Modifier</Text>
-        </TouchableOpacity>
+        {/* bouton de suppression : seulement pour l'auteur de la ressource */}
+        {userId == ressource.utilisateur.id && (
+          <TouchableOpacity
+          style={globalStyles.standardButton}
+          onPress={deleteRessource}>
+            <Text style={globalStyles.standardButtonText}>Supprimer</Text>
+          </TouchableOpacity>
+        )}
 
-        {/* bouton de suppression */}
-        <TouchableOpacity
-        style={globalStyles.standardButton}
-        onPress={deleteRessource}>
-          <Text style={globalStyles.standardButtonText}>Supprimer</Text>
-        </TouchableOpacity>
-        
       </View>
     </SafeAreaView>
   );

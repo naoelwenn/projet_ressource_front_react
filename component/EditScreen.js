@@ -6,6 +6,7 @@ import{Picker} from '@react-native-picker/picker';
 import MultiSelect from 'react-native-multiple-select';
 import Header from '../component/Header';
 import globalStyles from '../Styles/globalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screenWidth = Dimensions.get('window').width; //-- récupère la largeur de la fenetre
 
@@ -22,6 +23,20 @@ export default function EditScreen({ navigation, route }) {
     const[titre, setTitre] = useState("");
     const[contenu, setContenu] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    //-- récupère l'id de l'utilisateur connecté
+    useEffect(()=>{
+      const fetchUser = async () => {
+        try {
+          const id = await AsyncStorage.getItem('userId');
+          setUserId(id);
+        } catch (err) {
+          console.error('Erreur chargement user id:', err);
+        }
+      };
+      fetchUser();
+    })
 
     //-- valeur de ressource par defaut
     const defaultRessource = {
@@ -31,7 +46,7 @@ export default function EditScreen({ navigation, route }) {
         dateCreation: new Date().toISOString(),
         valide: true,
         suspendu: false,
-        utilisateur_id: 1, 
+        utilisateur: userId, 
         categorie_ressource: null,
         type_ressource: null,
         type_relation: [],
@@ -134,9 +149,14 @@ export default function EditScreen({ navigation, route }) {
     //-- fonction pour enregistrer
     const handleSave = async () => {
         const method = isEditMode ? 'PUT' : 'POST';
+
         const url = isEditMode 
           ? process.env.EXPO_PUBLIC_API_URL + `ressources/${ressource.id}` 
           : process.env.EXPO_PUBLIC_API_URL + `ressources`;
+          
+        const userIdRessource = isEditMode
+          ? ressourceModifiee.utilisateur.id
+          : userId;
 
         const ressourceModifiee = {
           id: isEditMode ? ressource.id : undefined,
@@ -145,7 +165,7 @@ export default function EditScreen({ navigation, route }) {
           dateCreation: ressource.dateCreation,
           valide:ressource.valide,
           suspendu: ressource.suspendu,
-          utilisateur_id: ressource.utilisateur_id,
+          utilisateur: {id: userIdRessource},
           categorie_ressource: { id: selectedCategorieRessource },
           type_ressource: { id: selectedTypeRessource },
           type_relation: selectedTypeRelation.map(id => ({ id }))

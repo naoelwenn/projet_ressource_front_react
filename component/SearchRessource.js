@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, FlatList, Image, useWindowDimensions, Touchable
 import React, {useEffect, useState} from 'react';
 import{Picker} from '@react-native-picker/picker';
 import { useFocusEffect } from '@react-navigation/native';
+import Header from '../component/Header';
+import globalStyles from '../Styles/globalStyles';
 
 const SearchRessource = ({navigation}) =>{
   const[text, setText] = useState("");
@@ -150,52 +152,20 @@ const SearchRessource = ({navigation}) =>{
 
   //-- affichage 
   return (
-    <View style={styles.container}>
-
-    <View style={styles.headerButtons}>
-      {/* bouton de connexion */}
-      <TouchableOpacity
-        style={styles.smallButton}
-        onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.smallButtonText}>Connexion</Text>
-      </TouchableOpacity>
-
-      {/* bouton de création d'un compte utilisateur */}
-      <TouchableOpacity
-        style={styles.smallButton}
-        onPress={() => navigation.navigate('Register')}
-        >
-        <Text style={styles.smallButtonText}>Inscription</Text>
-      </TouchableOpacity>
-    </View>
-
-      {/* bouton de connexion
-      <TouchableOpacity
-      style={styles.editButton}
-      onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.editButtonText}>Connexion</Text>
-      </TouchableOpacity>
-
-      // {/* bouton de création d'un compte utilisateur */}
-      {/* // <TouchableOpacity */}
-      {/* // style={styles.editButton}
-      // // onPress={() => navigation.navigate('Connexion')}
-      // >
-      // <Text style={styles.editButtonText}>Inscription</Text>
-      // </TouchableOpacity> */} 
+    <View style={globalStyles.container}>
+    <Header/>
 
       {/* bouton de création d'une ressource */}
       <TouchableOpacity
-      style={styles.editButton}
+      style={globalStyles.standardButton}
       onPress={() => navigation.navigate('Edition')}>
-        <Text style={styles.editButtonText}>Créer une ressource</Text>
+        <Text style={globalStyles.standardButtonText}>Créer une ressource</Text>
       </TouchableOpacity>
 
       {/* combobox type de relation */}
       <Picker
         selectedValue={selectedTypeRelation}
-        style={styles.searchressource}
+        style={globalStyles.input}
         onValueChange={(itemValue)=>setSelectedTypeRelation(itemValue)}
       >
         <Picker.Item label="Tous les types de relation" value=""/>
@@ -211,7 +181,7 @@ const SearchRessource = ({navigation}) =>{
       {/* combobox Catégorie de ressource */}
       <Picker
         selectedValue={selectedCategorieRessource}
-        style={styles.searchressource}
+        style={globalStyles.input}
         onValueChange={(itemValue)=>setSelectedCategorieRessource(itemValue)}
       >
         <Picker.Item label="Toutes les catégories" value=""/>
@@ -227,7 +197,7 @@ const SearchRessource = ({navigation}) =>{
       {/* combobox type de ressource */}
       <Picker
         selectedValue={selectedTypeRessource}
-        style={styles.searchressource}
+        style={globalStyles.input}
         onValueChange={(itemValue)=>setSelectedTypeRessource(itemValue)}
       >
         <Picker.Item label="Tous les types de ressource" value=""/>
@@ -242,7 +212,7 @@ const SearchRessource = ({navigation}) =>{
       
       {/* barre de recherche textuelle */}
       <TextInput 
-        style={styles.searchressource}
+        style={globalStyles.input}
         placeholder="Rechercher une ressource"
         onChangeText={setText}
         value={text} 
@@ -253,11 +223,11 @@ const SearchRessource = ({navigation}) =>{
           data={dataToDisplay}
           numColumns={numColumns}
           columnWrapperStyle={
-            numColumns > 1 ? styles.columnWrapper : null
+            numColumns > 1 ? globalStyles.columnWrapper : null
           } // ajoute de l'espacement horizontal
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={globalStyles.listContent}
           renderItem={({ item }) => (
-            <View style={[styles.itemContainer, { width: ITEM_WIDTH }]}>
+            <View style={[globalStyles.itemContainer, { width: ITEM_WIDTH }]}>
               {/* clicable */}
               <TouchableOpacity
                 onPress={()=>
@@ -266,22 +236,22 @@ const SearchRessource = ({navigation}) =>{
                 {/* Image */}
                 <Image
                   source={{ uri: "https://cdn-icons-png.flaticon.com/32/716/716784.png" }} // icone dossier pour exemple 
-                  style={styles.image}
+                  style={globalStyles.image}
                 />
                 {/* Titre */}
-                <Text style={styles.itemTitleText}>
+                <Text style={globalStyles.itemTitleText}>
                   {item?.titre ?? "Nom inconnu"}
                 </Text>
                 {/* Types de relation */}
-                <Text style={styles.itemText}>
+                <Text style={globalStyles.itemText}>
                   Relation : {item.type_relation?.map(tr => tr.libelle).join(", ")}
                 </Text>
                 {/* Catégorie de ressource */}
-                <Text style={styles.itemText}>
+                <Text style={globalStyles.itemText}>
                   Catégorie : {item.categorie_ressource.libelle}
                 </Text>
                 {/* Type de ressource */}
-                <Text style={styles.itemText}>
+                <Text style={globalStyles.itemText}>
                   Type : {item.type_ressource.libelle}
                 </Text>
               </TouchableOpacity>
@@ -291,106 +261,5 @@ const SearchRessource = ({navigation}) =>{
     </View>
   );
 }
-
-//-- style 
-const styles = StyleSheet.create({
-
-  searchressource: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginHorizontal: 10,
-    marginBottom: 15,
-    elevation: 2, // pour un peu d’ombre sur Android
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },  
-  container: {
-    flex: 1,
-    backgroundColor: "#f0f4f7",
-    paddingTop: 20,
-  },
-  listContent: {
-    paddingHorizontal: 10,
-  },
-  columnWrapper: {
-    justifyContent: "space-evenly", // espace égal entre les blocs
-    marginBottom: 20, // espace vertical entre les rangées
-  },
-  itemContainer: {
-    margin: 15,
-    backgroundColor: "#ffffff",
-    borderRadius: 8,
-    padding: 15,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
-    alignItems: "center",
-  },
-  itemTitleText: {
-    fontSize: 16,
-    color: "#333",
-    fontWeight: "500",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  itemText: {
-    fontSize: 14,
-    color: "#333",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    alignSelf: "center"
-  },
-  editButton: {
-    marginTop: 20,
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignSelf: 'center'
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  headerButtons: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginHorizontal: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    gap: 10,
-  },
-  
-  smallButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  
-  smallButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-});
 
 export default SearchRessource;

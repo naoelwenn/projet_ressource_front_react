@@ -6,63 +6,99 @@ const globalStyle = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#f0f4f7",
-        },
-
-    //-- entete de page 
-    headerButtons: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginHorizontal: 10,
-        marginBottom: 10,
-        marginTop: 10,
-        gap: 10,
     },
 
-    //-- bouton de l'entete
-    smallButton: {
+    //-- entete
+    header: {
+        paddingTop: 50,
+        paddingHorizontal: 20,
+        paddingBottom: 10,
         backgroundColor: '#007AFF',
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    
-    //-- texte des boutons de l'entete
-    smallButtonText: {
-        color: '#fff',
-        fontSize: 14,
-        fontWeight: 'bold',
+    headerTitle: {
+        color: '#fff', 
+        fontSize: 18, 
+        fontWeight: 'bold' 
+    },
+    headerLink: {
+        color: '#fff', 
+        marginHorizontal: 10 
+    },
+    headerButtonGroup: {
+        flexDirection: 'row' 
     },
 
     //-- champs de saisie (combobox et input text)
-    input: {
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        paddingVertical: 10,
+    standardInputContainer: {
+        marginBottom: 10,
+    },
+    standardLabel: {
         fontSize: 16,
-        borderColor: '#ddd',
+        marginBottom: 8,
+        color: '#333',
+    },
+    standardInput: {
         borderWidth: 1,
-        marginBottom: 15,
-        elevation: 2, // pour un peu d’ombre sur Android
-        shadowColor: "#000",
-        shadowOpacity: 0.05,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-        marginHorizontal: 10,
-    },  
+        borderColor: '#ddd',
+        borderRadius: 8,
+        padding: 15,
+        fontSize: 16,
+        backgroundColor: '#f9f9f9',
+    }, 
+    standardInputError: {
+        borderColor: '#ff3b30',
+        backgroundColor: '#fff5f5',
+    },
+    standardErrorText: {
+        color: '#ff3b30',
+        fontSize: 14,
+        marginTop: 5,
+        marginLeft: 5,
+    }, 
+
+    //input radio
+    standardRadioContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    standardRadioButton: {
+        flex: 1,
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        marginHorizontal: 5,
+        alignItems: 'center',
+    },
+    standardRadioButtonSelected: {
+        backgroundColor: '#007AFF',
+        borderColor: '#007AFF',
+    },
+    standardRadioText: {
+        fontSize: 16,
+        color: '#333',
+    },
+    stantardRadioTextSelected: {
+        color: '#fff',
+    },
 
     //-- Liste des ressources (blocs)
     listContent: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 3,
     },
     columnWrapper: {
-        justifyContent: "space-evenly", // espace égal entre les blocs
-        marginBottom: 20, // espace vertical entre les rangées
+        justifyContent: "space-evenly", 
+        marginBottom: 7,
     },
     itemContainer: {
-        margin: 15,
+        margin: 5,
         backgroundColor: "#ffffff",
         borderRadius: 8,
-        padding: 15,
+        padding: 5,
         borderColor: "#ddd",
         borderWidth: 1,
         shadowColor: "#000",
@@ -94,22 +130,31 @@ const globalStyle = StyleSheet.create({
 
     //-- bouton standard
     standardButton: {
-        marginTop: 20,
         backgroundColor: '#007AFF',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        padding: 15,
         borderRadius: 8,
-        alignSelf: 'center'
+        alignItems: 'center',
+        marginTop: 20,
     },
     standardButtonText: {
         color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    buttonDisabled: {
+        backgroundColor: '#999',
+    },
+    standardLinkButton: {
+        marginTop: 15,
+        alignItems: 'center',
+    },
+    standardLinkText: {
+        color: '#007AFF',
         fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
 
-    //-- titre d'une ressource
-    title: {
+    //-- fiche ressource
+    ressourceTitle: {
         fontSize: 16,
         color: "#333",
         fontWeight: "500",
@@ -117,12 +162,40 @@ const globalStyle = StyleSheet.create({
         textAlign: "center",
     },
 
-    //-- texte d'une ressource
-    text: {
+    ressourceText: {
         fontSize: 14,
         color: "#333",
         marginTop: 8,
         textAlign: "center",
+    },
+
+    //-- formulaire d'inscription / connexion
+    keyboardAvoidingView: {
+        flex: 1,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+    },
+    formContainer: {
+        padding: 20,
+        justifyContent: 'center',
+    },
+    errorContainer: {
+        backgroundColor: '#fff5f5',
+        borderWidth: 1,
+        borderColor: '#ff3b30',
+        borderRadius: 8,
+        padding: 15,
+        marginBottom: 20,
+    },
+
+    // titre standard
+    standardTitle: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        marginBottom: 30,
+        textAlign: 'center',
+        color: '#333',
     },
 });
 

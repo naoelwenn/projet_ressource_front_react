@@ -111,18 +111,18 @@ export default function DetailsScreen({ navigation, route }) {
   return (
     <SafeAreaView style={globalStyles.container}>
       <Header/>
-      <View style={globalStyles.header}>
+      <View style={globalStyles.container}>
         {/* fiche de la ressource */}
         <Image
             source={{ uri: "https://cdn-icons-png.flaticon.com/32/716/716784.png" }} // icone dossier pour exemple
             style={globalStyles.image}
         />
-        <Text style={globalStyles.title}>{ressource.titre}</Text>
-        <Text style = {globalStyles.text}>Crée le : {ressource.dateCreation} par {ressource.utilisateur.pseudo}</Text>
-        <Text style = {globalStyles.text}>Relation : {ressource.type_relation?.map(tr => tr.libelle).join(", ")}</Text>
-        <Text style = {globalStyles.text}>Catégorie : {ressource.categorie_ressource.libelle}</Text>
-        <Text style = {globalStyles.text}>Type : {ressource.type_ressource.libelle}</Text>
-        <Text style = {globalStyles.text}>{ressource.contenu}</Text>
+        <Text style={globalStyles.ressourceTitle}>{ressource.titre}</Text>
+        <Text style = {globalStyles.ressourceText}>Crée le : {ressource.dateCreation} par {ressource.utilisateur.pseudo}</Text>
+        <Text style = {globalStyles.ressourceText}>Relation : {ressource.type_relation?.map(tr => tr.libelle).join(", ")}</Text>
+        <Text style = {globalStyles.ressourceText}>Catégorie : {ressource.categorie_ressource.libelle}</Text>
+        <Text style = {globalStyles.ressourceText}>Type : {ressource.type_ressource.libelle}</Text>
+        <Text style = {globalStyles.ressourceText}>{ressource.contenu}</Text>
 
         {/* bouton de téléchargement : seulement si un fichier est présent*/}
         {file != "" && (

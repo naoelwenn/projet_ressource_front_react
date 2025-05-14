@@ -119,24 +119,24 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
+        style={globalStyles.keyboardAvoidingView}
       >
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Connexion</Text>
+        <View style={globalStyles.formContainer}>
+          <Text style={globalStyles.standardTitle}>Connexion</Text>
 
           {loginError ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{loginError}</Text>
+            <View style={globalStyles.errorContainer}>
+              <Text style={globalStyles.standardErrorText}>{loginError}</Text>
             </View>
           ) : null}
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email *</Text>
+          <View style={globalStyles.standardInputContainer}>
+            <Text style={globalStyles.label}>Email *</Text>
             <TextInput
-              style={[styles.input, errors.email ? styles.inputError : null]}
+              style={[globalStyles.standardInput, errors.email ? globalStyles.standardInputError : null]}
               placeholder="Entrez votre email"
               value={formData.email}
               onChangeText={(value) => handleChange('email', value)}
@@ -144,38 +144,38 @@ const LoginScreen = ({ navigation }) => {
               autoCapitalize="none"
               editable={!isLoading}
             />
-            {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+            {errors.email ? <Text style={globalStyles.standardErrorText}>{errors.email}</Text> : null}
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mot de passe *</Text>
+          <View style={globalStyles.standardInputContainer}>
+            <Text style={globalStyles.label}>Mot de passe *</Text>
             <TextInput
-              style={[styles.input, errors.password ? styles.inputError : null]}
+              style={[globalStyles.standardInput, errors.password ? globalStyles.standardInputError : null]}
               placeholder="Entrez votre mot de passe"
               value={formData.password}
               onChangeText={(value) => handleChange('password', value)}
               secureTextEntry
               editable={!isLoading}
             />
-            {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+            {errors.password ? <Text style={globalStyles.standardErrorText}>{errors.password}</Text> : null}
           </View>
 
           <TouchableOpacity 
-            style={[styles.button, isLoading && styles.buttonDisabled]} 
+            style={[globalStyles.standardButton, isLoading && globalStyles.buttonDisabled]} 
             onPress={handleLogin}
             disabled={isLoading}
           >
-            <Text style={styles.buttonText}>
+            <Text style={globalStyles.standardButtonText}>
               {isLoading ? 'Connexion...' : 'Se connecter'}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.linkButton}
+            style={globalStyles.standardLinkButton}
             onPress={() => navigation.navigate('Register')}
             disabled={isLoading}
           >
-            <Text style={styles.linkText}>
+            <Text style={globalStyles.standardLinkText}>
               Pas encore inscrit ? S'inscrire
             </Text>
           </TouchableOpacity>
@@ -184,83 +184,5 @@ const LoginScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  formContainer: {
-    padding: 20,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    textAlign: 'center',
-    color: '#333',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  inputError: {
-    borderColor: '#ff3b30',
-    backgroundColor: '#fff5f5',
-  },
-  errorText: {
-    color: '#ff3b30',
-    fontSize: 14,
-    marginTop: 5,
-    marginLeft: 5,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: '#999',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  linkButton: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#007AFF',
-    fontSize: 16,
-  },
-  errorContainer: {
-    backgroundColor: '#fff5f5',
-    borderWidth: 1,
-    borderColor: '#ff3b30',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 20,
-  },
-});
 
 export default LoginScreen; 

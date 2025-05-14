@@ -3,6 +3,7 @@ import {  StyleSheet,  View,  Text,  TextInput,  TouchableOpacity,  SafeAreaView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
+import globalStyle from '../Styles/globalStyles';
 
 const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -195,19 +196,19 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyle.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
+        style={globalStyle.keyboardAvoidingView}
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.formContainer}>
-            <Text style={styles.title}>Inscription</Text>
+        <ScrollView contentContainerStyle={globalStyle.scrollContainer}>
+          <View style={globalStyle.formContainer}>
+            <Text style={globalStyle.standardTitle}>Inscription</Text>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Email *</Text>
               <TextInput
-                style={[styles.input, errors.email ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.email ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre email"
                 value={formData.email}
                 onChangeText={(value) => handleChange('email', value)}
@@ -215,50 +216,50 @@ const RegisterScreen = ({ navigation }) => {
                 autoCapitalize="none"
                 editable={!isLoading}
               />
-              {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+              {errors.email ? <Text style={globalStyle.standardErrorText}>{errors.email}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Mot de passe *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Mot de passe *</Text>
               <TextInput
-                style={[styles.input, errors.password ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.password ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre mot de passe"
                 value={formData.password}
                 onChangeText={(value) => handleChange('password', value)}
                 secureTextEntry
                 editable={!isLoading}
               />
-              {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+              {errors.password ? <Text style={globalStyle.standardErrorText}>{errors.password}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Pseudo *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Pseudo *</Text>
               <TextInput
-                style={[styles.input, errors.pseudo ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.pseudo ? globalStyle.standardInputError : null]}
                 placeholder="Choisissez un pseudo"
                 value={formData.pseudo}
                 onChangeText={(value) => handleChange('pseudo', value)}
                 editable={!isLoading}
               />
-              {errors.pseudo ? <Text style={styles.errorText}>{errors.pseudo}</Text> : null}
+              {errors.pseudo ? <Text style={globalStyle.standardErrorText}>{errors.pseudo}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Ville *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Ville *</Text>
               <TextInput
-                style={[styles.input, errors.ville ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.ville ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
                 onChangeText={(value) => handleChange('ville', value)}
                 editable={!isLoading}
               />
-              {errors.ville ? <Text style={styles.errorText}>{errors.ville}</Text> : null}
+              {errors.ville ? <Text style={globalStyle.standardErrorText}>{errors.ville}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Code postal *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Code postal *</Text>
               <TextInput
-                style={[styles.input, errors.codepostal ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.codepostal ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
                 onChangeText={(value) => handleChange('codepostal', value)}
@@ -266,13 +267,13 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={5}
                 editable={!isLoading}
               />
-              {errors.codepostal ? <Text style={styles.errorText}>{errors.codepostal}</Text> : null}
+              {errors.codepostal ? <Text style={globalStyle.standardErrorText}>{errors.codepostal}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Année de naissance *</Text>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>Année de naissance *</Text>
               <TextInput
-                style={[styles.input, errors.anneenaissance ? styles.inputError : null]}
+                style={[globalStyle.standardInput, errors.anneenaissance ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}
                 onChangeText={(value) => handleChange('anneenaissance', value)}
@@ -280,57 +281,57 @@ const RegisterScreen = ({ navigation }) => {
                 maxLength={4}
                 editable={!isLoading}
               />
-              {errors.anneenaissance ? <Text style={styles.errorText}>{errors.anneenaissance}</Text> : null}
+              {errors.anneenaissance ? <Text style={globalStyle.standardErrorText}>{errors.anneenaissance}</Text> : null}
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>État civil</Text>
-              <View style={styles.radioContainer}>
+            <View style={globalStyle.standardInputContainer}>
+              <Text style={globalStyle.label}>État civil</Text>
+              <View style={globalStyle.standardRadioContainer}>
                 <TouchableOpacity
                   style={[
-                    styles.radioButton,
-                    formData.etatcivil === 'H' && styles.radioButtonSelected
+                    globalStyle.standardRadioButton,
+                    formData.etatcivil === 'H' && globalStyle.standardRadioButtonSelected
                   ]}
                   onPress={() => handleChange('etatcivil', 'H')}
                   disabled={isLoading}
                 >
                   <Text style={[
-                    styles.radioText,
-                    formData.etatcivil === 'H' && styles.radioTextSelected
+                    globalStyle.standardRadioText,
+                    formData.etatcivil === 'H' && globalStyle.stantardRadioTextSelected
                   ]}>Homme</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    styles.radioButton,
-                    formData.etatcivil === 'F' && styles.radioButtonSelected
+                    globalStyle.standardRadioButton,
+                    formData.etatcivil === 'F' && globalStyle.standardRadioButtonSelected
                   ]}
                   onPress={() => handleChange('etatcivil', 'F')}
                   disabled={isLoading}
                 >
                   <Text style={[
-                    styles.radioText,
-                    formData.etatcivil === 'F' && styles.radioTextSelected
+                    globalStyle.standardRadioText,
+                    formData.etatcivil === 'F' && globalStyle.stantardRadioTextSelected
                   ]}>Femme</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
             <TouchableOpacity 
-              style={[styles.button, isLoading && styles.buttonDisabled]} 
+              style={[globalStyle.standardButton, isLoading && globalStyle.buttonDisabled]} 
               onPress={handleRegister}
               disabled={isLoading}
             >
-              <Text style={styles.buttonText}>
+              <Text style={globalStyle.standardButtonText}>
                 {isLoading ? 'Inscription...' : 'S\'inscrire'}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={styles.linkButton}
+              style={globalStyle.standardLinkButton}
               onPress={() => navigation.navigate('Login')}
               disabled={isLoading}
             >
-              <Text style={styles.linkText}>
+              <Text style={globalStyle.standardLinkText}>
                 Déjà inscrit ? Se connecter
               </Text>
             </TouchableOpacity>
@@ -340,104 +341,6 @@ const RegisterScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  formContainer: {
-    padding: 20,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    textAlign: 'center',
-    color: '#333',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  inputError: {
-    borderColor: '#ff3b30',
-    backgroundColor: '#fff5f5',
-  },
-  errorText: {
-    color: '#ff3b30',
-    fontSize: 14,
-    marginTop: 5,
-    marginLeft: 5,
-  },
-  radioContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  radioButton: {
-    flex: 1,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    marginHorizontal: 5,
-    alignItems: 'center',
-  },
-  radioButtonSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-  },
-  radioText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  radioTextSelected: {
-    color: '#fff',
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: '#999',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  linkButton: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#007AFF',
-    fontSize: 16,
-  },
-});
 
 export default RegisterScreen; 
 

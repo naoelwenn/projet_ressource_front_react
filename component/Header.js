@@ -35,26 +35,29 @@ const Header = ({ user }) => {
   }
 
   return (
-    <View style={styles.header}>
-      <Text style={styles.title}>Ressources relationnelles</Text>
-      <View style={styles.buttonGroup}>
+    <View style={globalStyles.header}>
+      <Text style={globalStyles.headerTitle}>Ressources relationnelles</Text>
+      <View style={globalStyles.headerButtonGroup}>
 
       {/* SI l'utilisateur est connecté : nom de l'utilisateur + btn déconnexion*/}
       {/* SI l'utilisateur n'est pas connecté : connexion + inscription*/}
       {userPseudo ? (
           <>
-            <Text style={styles.userText}>Bonjour, {userPseudo}</Text>
+            <Text style={globalStyles.headerLink}>Bonjour, {userPseudo}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Edition')}>
+              <Text style={globalStyles.headerLink}>Créer une ressource</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleLogout}>
-              <Text style={styles.link}>Déconnexion</Text>
+              <Text style={globalStyles.headerLink}>Déconnexion</Text>
             </TouchableOpacity>
           </>
         ) : (
           <>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.link}>Connexion</Text>
+              <Text style={globalStyles.headerLink}>Connexion</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.link}>Inscription</Text>
+              <Text style={globalStyles.headerLink}>Inscription</Text>
             </TouchableOpacity>
           </>
         )}
@@ -62,21 +65,5 @@ const Header = ({ user }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    backgroundColor: '#007AFF',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  userText: { color: '#fff', fontSize: 16 },
-  link: { color: '#fff', marginHorizontal: 10 },
-  buttonGroup: { flexDirection: 'row' }
-});
 
 export default Header;

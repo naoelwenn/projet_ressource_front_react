@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Image, useWindowDimensions, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, useWindowDimensions, TouchableOpacity, TextInput, SafeAreaView, KeyboardAvoidingView, ScrollView, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import{Picker} from '@react-native-picker/picker';
 import { useFocusEffect } from '@react-navigation/native';
@@ -152,113 +152,129 @@ const SearchRessource = ({navigation}) =>{
 
   //-- affichage 
   return (
-    <View style={globalStyles.container}>
-    <Header/>
-
-      {/* bouton de création d'une ressource */}
-      <TouchableOpacity
-      style={globalStyles.standardButton}
-      onPress={() => navigation.navigate('Edition')}>
-        <Text style={globalStyles.standardButtonText}>Créer une ressource</Text>
-      </TouchableOpacity>
-
-      {/* combobox type de relation */}
-      <Picker
-        selectedValue={selectedTypeRelation}
-        style={globalStyles.input}
-        onValueChange={(itemValue)=>setSelectedTypeRelation(itemValue)}
+    <SafeAreaView style={globalStyles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={globalStyles.keyboardAvoidingView}
       >
-        <Picker.Item label="Tous les types de relation" value=""/>
-        {type_relation.map((type)=> (
-          <Picker.Item
-            key = {type.id}
-            label = {type.libelle ?? "Type inconnu"}
-            value = {type.id}
-          />
-        ))}
-      </Picker>
+        {/*Entete */}
+        <View>
+          <Header/>
+        </View>
+        
+        <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
+          <View style={globalStyles.container}>
 
-      {/* combobox Catégorie de ressource */}
-      <Picker
-        selectedValue={selectedCategorieRessource}
-        style={globalStyles.input}
-        onValueChange={(itemValue)=>setSelectedCategorieRessource(itemValue)}
-      >
-        <Picker.Item label="Toutes les catégories" value=""/>
-        {categorie_ressource.map((type)=> (
-          <Picker.Item
-            key = {type.id}
-            label = {type.libelle ?? "Catégorie inconnue"}
-            value = {type.id}
-          />
-        ))}
-      </Picker>
-
-      {/* combobox type de ressource */}
-      <Picker
-        selectedValue={selectedTypeRessource}
-        style={globalStyles.input}
-        onValueChange={(itemValue)=>setSelectedTypeRessource(itemValue)}
-      >
-        <Picker.Item label="Tous les types de ressource" value=""/>
-        {type_ressource.map((type)=> (
-          <Picker.Item
-            key = {type.id}
-            label = {type.libelle ?? "Type inconnu"}
-            value = {type.id}
-          />
-        ))}
-      </Picker>
-      
-      {/* barre de recherche textuelle */}
-      <TextInput 
-        style={globalStyles.input}
-        placeholder="Rechercher une ressource"
-        onChangeText={setText}
-        value={text} 
-      />
-
-      {/* Liste des ressources */}
-      <FlatList
-          data={dataToDisplay}
-          numColumns={numColumns}
-          columnWrapperStyle={
-            numColumns > 1 ? globalStyles.columnWrapper : null
-          } // ajoute de l'espacement horizontal
-          contentContainerStyle={globalStyles.listContent}
-          renderItem={({ item }) => (
-            <View style={[globalStyles.itemContainer, { width: ITEM_WIDTH }]}>
-              {/* clicable */}
-              <TouchableOpacity
-                onPress={()=>
-                navigation.navigate("Ma ressource", {ressourceId: item.id})
-              }>
-                {/* Image */}
-                <Image
-                  source={{ uri: "https://cdn-icons-png.flaticon.com/32/716/716784.png" }} // icone dossier pour exemple 
-                  style={globalStyles.image}
+            {/* combobox type de relation */}
+            <View style={globalStyles.standardInputContainer}>
+              <Picker
+                selectedValue={selectedTypeRelation}
+                style={globalStyles.standardInput}
+                onValueChange={(itemValue)=>setSelectedTypeRelation(itemValue)}
+              >
+                <Picker.Item label="Tous les types de relation" value=""/>
+                {type_relation.map((type)=> (
+                <Picker.Item
+                  key = {type.id}
+                  label = {type.libelle ?? "Type inconnu"}
+                  value = {type.id}
                 />
-                {/* Titre */}
-                <Text style={globalStyles.itemTitleText}>
-                  {item?.titre ?? "Nom inconnu"}
-                </Text>
-                {/* Types de relation */}
-                <Text style={globalStyles.itemText}>
-                  Relation : {item.type_relation?.map(tr => tr.libelle).join(", ")}
-                </Text>
-                {/* Catégorie de ressource */}
-                <Text style={globalStyles.itemText}>
-                  Catégorie : {item.categorie_ressource.libelle}
-                </Text>
-                {/* Type de ressource */}
-                <Text style={globalStyles.itemText}>
-                  Type : {item.type_ressource.libelle}
-                </Text>
-              </TouchableOpacity>
+                ))}
+              </Picker>
             </View>
-          )}
-      />
-    </View>
+
+            {/* combobox Catégorie de ressource */}
+            <View style={globalStyles.standardInputContainer}>
+              <Picker
+              selectedValue={selectedCategorieRessource}
+              style={globalStyles.standardInput}
+              onValueChange={(itemValue)=>setSelectedCategorieRessource(itemValue)}
+              >
+                <Picker.Item label="Toutes les catégories" value=""/>
+                {categorie_ressource.map((type)=> (
+                <Picker.Item
+                  key = {type.id}
+                  label = {type.libelle ?? "Catégorie inconnue"}
+                  value = {type.id}
+                />
+                ))}
+              </Picker>
+            </View>
+
+
+            {/* combobox type de ressource */}
+            <View style={globalStyles.standardInputContainer}>
+              <Picker
+              selectedValue={selectedTypeRessource}
+              style={globalStyles.standardInput}
+              onValueChange={(itemValue)=>setSelectedTypeRessource(itemValue)}
+              >
+                <Picker.Item label="Tous les types de ressource" value=""/>
+                {type_ressource.map((type)=> (
+                  <Picker.Item
+                    key = {type.id}
+                    label = {type.libelle ?? "Type inconnu"}
+                    value = {type.id}
+                  />
+                ))}
+              </Picker>
+            </View>
+
+              
+            {/* barre de recherche textuelle */}
+            <View style={globalStyles.standardInputContainer}>
+              <TextInput 
+                style={globalStyles.standardInput}
+                placeholder="Rechercher une ressource"
+                onChangeText={setText}
+                value={text} 
+              />
+            </View>
+
+            {/* Liste des ressources */}
+            <FlatList
+                data={dataToDisplay}
+                numColumns={numColumns}
+                columnWrapperStyle={
+                  numColumns > 1 ? globalStyles.columnWrapper : null
+                } // ajoute de l'espacement horizontal
+                contentContainerStyle={globalStyles.listContent}
+                renderItem={({ item }) => (
+                  <View style={[globalStyles.itemContainer, { width: ITEM_WIDTH }]}>
+                    {/* clicable */}
+                    <TouchableOpacity
+                      onPress={()=>
+                      navigation.navigate("Ma ressource", {ressourceId: item.id})
+                    }>
+                      {/* Image */}
+                      <Image
+                        source={{ uri: "https://cdn-icons-png.flaticon.com/32/716/716784.png" }} // icone dossier pour exemple 
+                        style={globalStyles.image}
+                      />
+                      {/* Titre */}
+                      <Text style={globalStyles.itemTitleText}>
+                        {item?.titre ?? "Nom inconnu"}
+                      </Text>
+                      {/* Types de relation */}
+                      <Text style={globalStyles.itemText}>
+                        Relation : {item.type_relation?.map(tr => tr.libelle).join(", ")}
+                      </Text>
+                      {/* Catégorie de ressource */}
+                      <Text style={globalStyles.itemText}>
+                        Catégorie : {item.categorie_ressource.libelle}
+                      </Text>
+                      {/* Type de ressource */}
+                      <Text style={globalStyles.itemText}>
+                        Type : {item.type_ressource.libelle}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

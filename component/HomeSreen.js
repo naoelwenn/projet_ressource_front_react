@@ -3,16 +3,8 @@ import SearchRessource from "./SearchRessource";
 import globalStyles from '../Styles/globalStyles';
 export default function HomeScreen({navigation}){
     return(
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
             <SearchRessource navigation={navigation}/>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f0f4f7",
-        paddingTop: 20,
-      }
-})

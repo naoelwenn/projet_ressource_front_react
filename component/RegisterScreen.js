@@ -235,6 +235,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Pseudo *</Text>
               <TextInput
+                testID="pseudoInput"
                 style={[globalStyle.standardInput, errors.pseudo ? globalStyle.standardInputError : null]}
                 placeholder="Choisissez un pseudo"
                 value={formData.pseudo}
@@ -247,6 +248,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Ville *</Text>
               <TextInput
+                testID='villeInput'
                 style={[globalStyle.standardInput, errors.ville ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre ville"
                 value={formData.ville}
@@ -259,6 +261,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Code postal *</Text>
               <TextInput
+                testID='cpInput'
                 style={[globalStyle.standardInput, errors.codepostal ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre code postal"
                 value={formData.codepostal}
@@ -273,6 +276,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={globalStyle.standardInputContainer}>
               <Text style={globalStyle.label}>Année de naissance *</Text>
               <TextInput
+                testID='birthdayInput'
                 style={[globalStyle.standardInput, errors.anneenaissance ? globalStyle.standardInputError : null]}
                 placeholder="Entrez votre année de naissance"
                 value={formData.anneenaissance}

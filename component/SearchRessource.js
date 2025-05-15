@@ -158,11 +158,11 @@ const SearchRessource = ({navigation}) =>{
         style={globalStyles.keyboardAvoidingView}
       >
         {/*Entete */}
-        <View>
-          <Header/>
-        </View>
+          <View>
+            <Header/>
+          </View>
+
         
-        <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
           <View style={globalStyles.container}>
 
             {/* combobox type de relation */}
@@ -219,7 +219,6 @@ const SearchRessource = ({navigation}) =>{
                 ))}
               </Picker>
             </View>
-
               
             {/* barre de recherche textuelle */}
             <View style={globalStyles.standardInputContainer}>
@@ -272,7 +271,6 @@ const SearchRessource = ({navigation}) =>{
                 )}
             />
           </View>
-        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

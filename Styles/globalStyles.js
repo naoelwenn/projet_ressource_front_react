@@ -10,31 +10,34 @@ const globalStyle = StyleSheet.create({
 
     //-- entete
     header: {
-        paddingTop: 50,
-        paddingHorizontal: 20,
-        paddingBottom: 10,
-        backgroundColor: '#007AFF',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#000091',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        textAlign:'center',
     },
     headerTitle: {
-        color: '#fff', 
-        fontSize: 18, 
-        fontWeight: 'bold' 
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        lineHeight: 24,
     },
     headerLink: {
         color: '#fff', 
         marginHorizontal: 10 
     },
     headerButtonGroup: {
-        flexDirection: 'row' 
+        flexDirection: 'row', // changée dynamiquement via `isMobile`
+        flexWrap: 'wrap',
+        gap: 10,
     },
 
     //-- champs de saisie (combobox et input text)
     standardInputContainer: {
-        marginTop: 5,
-        marginBottom:5
+        paddingHorizontal:10,
+        paddingVertical:5
     },
     standardLabel: {
         fontSize: 16,
@@ -45,7 +48,7 @@ const globalStyle = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
-        padding: 15,
+        padding: 5,
         fontSize: 16,
         backgroundColor: '#f9f9f9',
     }, 
@@ -68,7 +71,7 @@ const globalStyle = StyleSheet.create({
     },
     standardRadioButton: {
         flex: 1,
-        padding: 15,
+        padding: 5,
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
@@ -76,8 +79,8 @@ const globalStyle = StyleSheet.create({
         alignItems: 'center',
     },
     standardRadioButtonSelected: {
-        backgroundColor: '#007AFF',
-        borderColor: '#007AFF',
+        backgroundColor: '#000091',
+        borderColor: '#000091',
     },
     standardRadioText: {
         fontSize: 16,
@@ -113,13 +116,13 @@ const globalStyle = StyleSheet.create({
         fontSize: 16,
         color: "#333",
         fontWeight: "500",
-        marginTop: 8,
+        marginTop: 4,
         textAlign: "center",
     },
     itemText: {
         fontSize: 14,
         color: "#333",
-        marginTop: 8,
+        marginTop: 2,
         textAlign: "center",
     },
     image: {
@@ -128,11 +131,19 @@ const globalStyle = StyleSheet.create({
         resizeMode: "contain",
         alignSelf: "center"
     },
+    imageHeader:{
+        width: 80,
+        height: 80,
+        resizeMode: "contain",
+        alignSelf: "flex-start",
+        borderRadius:8,
+    },
 
     //-- bouton standard
     standardButton: {
-        backgroundColor: '#007AFF',
-        padding: 15,
+        backgroundColor: '#000091',
+        paddingVertical: 5,
+        paddingHorizontal:10,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 20,
@@ -151,7 +162,7 @@ const globalStyle = StyleSheet.create({
         alignItems: 'center',
     },
     standardLinkText: {
-        color: '#007AFF',
+        color: '#000091',
         fontSize: 16,
     },
 

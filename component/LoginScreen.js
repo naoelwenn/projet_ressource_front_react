@@ -113,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
   const storeToken = async (token, id, pseudo) => {
     try {
       await AsyncStorage.setItem('userToken', token);
-      await AsyncStorage.setItem('userId', id);
+      await AsyncStorage.setItem('userId', String(id));
       await AsyncStorage.setItem('userPseudo', pseudo);
     } catch (e) {
       console.error('Erreur stockage token :', e);

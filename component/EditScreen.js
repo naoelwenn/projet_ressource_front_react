@@ -154,7 +154,7 @@ export default function EditScreen({ navigation, route }) {
     : process.env.EXPO_PUBLIC_API_URL + `ressources`;
 
     const userIdRessource = isEditMode
-    ? ressourceModifiee.utilisateur.id
+    ? ressource.utilisateur.id
     : userId;
 
     const ressourceModifiee = {
@@ -169,7 +169,7 @@ export default function EditScreen({ navigation, route }) {
       type_ressource: { id: selectedTypeRessource },
       type_relation: selectedTypeRelation.map(id => ({ id }))
     };
-    
+
     try {
       const response = await fetch(url, {
         method: method,
@@ -336,7 +336,7 @@ export default function EditScreen({ navigation, route }) {
 
         {/* Uploader un document / fichier : en mode web uniquement */}
         {Platform.OS === 'web' && (
-          <input type="file" onChange={handleFileChange} style={{ marginBottom: 10 }}/>
+          <input type="file" onChange={handleFileChange} style={{ margin: 10 }}/>
         )}
         {selectedFile && <Text>Fichier sélectionné : {selectedFile.name}</Text>}
 

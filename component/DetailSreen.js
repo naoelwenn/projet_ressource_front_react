@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Alert  } from 'react-native';
+import { Text, View, Image, TouchableOpacity, Alert, Platform  } from 'react-native';
 import { useState, useEffect } from 'react';
 import { SafeAreaView} from 'react-native';
 import Header from '../component/Header';
@@ -72,8 +72,29 @@ export default function DetailsScreen({ navigation, route }) {
   //-- demande la confirmation avant suppression
   const confirmation = () => {
     return new Promise((resolve) => {
-      const confirmed = window.confirm("Voulez-vous vraiment supprimer cette ressource ?");
-      resolve(confirmed);
+      if (Platform.OS === 'web') {
+        const confirmed = window.confirm("Voulez-vous vraiment supprimer cette ressource ?");
+        resolve(confirmed);
+      }else{
+        Alert.alert(
+          "Confirmation",
+          "Voulez-vous vraiment supprimer cette ressource ?",
+          [
+            {
+              text: "Annuler",
+              style: "cancel",
+              onPress: () => resolve(false),
+            },
+            {
+              text: "Supprimer",
+              style: "destructive",
+              onPress: () => resolve(true),
+            },
+          ],
+          { cancelable: true }
+        );
+      }
+
     });
   };
 
@@ -99,6 +120,18 @@ export default function DetailsScreen({ navigation, route }) {
     const downloadUrl = process.env.EXPO_PUBLIC_API_URL + `ressources/${ressource.id}/download`;
     window.open(downloadUrl, '_blank');
   };
+
+  //-- format de date : 15/05/2025 15:19
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mois de 0 à 11
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
   
   //-- affiche Loading si les infos ne sont pas récupérées
   if (!ressource) {
@@ -118,7 +151,7 @@ export default function DetailsScreen({ navigation, route }) {
             style={globalStyles.image}
         />
         <Text style={globalStyles.ressourceTitle}>{ressource.titre}</Text>
-        <Text style = {globalStyles.ressourceText}>Crée le : {ressource.dateCreation} par {ressource.utilisateur.pseudo}</Text>
+        <Text style = {globalStyles.ressourceText}>Crée le : {formatDate(ressource.dateCreation)} par {ressource.utilisateur.pseudo}</Text>
         <Text style = {globalStyles.ressourceText}>Relation : {ressource.type_relation?.map(tr => tr.libelle).join(", ")}</Text>
         <Text style = {globalStyles.ressourceText}>Catégorie : {ressource.categorie_ressource.libelle}</Text>
         <Text style = {globalStyles.ressourceText}>Type : {ressource.type_ressource.libelle}</Text>
@@ -131,7 +164,7 @@ export default function DetailsScreen({ navigation, route }) {
           </TouchableOpacity>
         )}
 
-        {file != "" && (<Text style = {globalStyles.text}>Fichier : {file}</Text>)}
+        {file != "" && (<Text style = {globalStyles.ressourceText}>Fichier : {file}</Text>)}
 
         {/* bouton de modification : seulement pour l'auteur de la ressource */}
         {userId == ressource.utilisateur.id && (

@@ -26,7 +26,8 @@ const globalStyle = StyleSheet.create({
     },
     headerLink: {
         color: '#fff', 
-        marginHorizontal: 10 
+        marginHorizontal: 10,
+        fontSize: 16, 
     },
     headerButtonGroup: {
         flexDirection: 'row', // changée dynamiquement via `isMobile`
@@ -168,7 +169,7 @@ const globalStyle = StyleSheet.create({
 
     //-- fiche ressource
     ressourceTitle: {
-        fontSize: 16,
+        fontSize: 18,
         color: "#333",
         fontWeight: "500",
         marginTop: 8,
@@ -176,7 +177,7 @@ const globalStyle = StyleSheet.create({
     },
 
     ressourceText: {
-        fontSize: 14,
+        fontSize: 16,
         color: "#333",
         marginTop: 8,
         textAlign: "center",
